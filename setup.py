@@ -11,8 +11,5 @@ setup(
     name="records",
     version="0.0.1",
     packages=[],
-    install_requires=["pandas"],
-    entry_points={
-        "console_scripts": ["piglatin = piglatin.__main__:run_program"]
-    }
+    install_requires=["pandas"]
 )
