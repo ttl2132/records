@@ -9,7 +9,7 @@ import pandas as pd
 
 
 class Records:
-    def __init__(self, genusKey=None, year=None):
+    def __init__(self, genusKey=None, year=None, genusName=None):
         """
         Parameters
         ----------
@@ -19,6 +19,7 @@ class Records:
             Year range separated by a comma. Defaults to None.
         """
         # store input params
+        self.genusName = genusName
         self.genusKey = genusKey
         self.year = year
 
@@ -28,16 +29,21 @@ class Records:
 
     def get_single_batch(self, offset=0, limit=20):
         "returns JSON result for a small batch query"
-        res = requests.get(
-            url="https://api.gbif.org/v1/occurrence/search/",
-            params={
-                "genusKey": self.genusKey,
+        p = {
                 "year": self.year,
                 "offset": offset,
                 "limit": limit,
                 "hasCoordinate": "true",
                 "country": "US",
             }
+        if self.genusKey:
+            p["genusKey"] = self.genusKey
+        elif self.genusName:
+            p["q"] = self.genusName
+            p["rank"] = "GENUS"
+        res = requests.get(
+            url="https://api.gbif.org/v1/occurrence/search/",
+            params=p
         )
         return res.json()
 
